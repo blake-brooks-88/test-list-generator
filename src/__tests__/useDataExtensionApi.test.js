@@ -73,6 +73,8 @@ describe('useDataExtensionApi', () => {
         const expectedData = {
             name: "Transactional_Journey_API_Entry",
             externalKey: "46F82D8F-B4AA-4BD4-8151-F751448C6608",
+            sendableDeField: "SubscriberKey",
+            sendableSubscriberField: "_SubscriberKey",
             fields: [
                 {
                     Name: "SubscriberKey",

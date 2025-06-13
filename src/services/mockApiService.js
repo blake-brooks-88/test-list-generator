@@ -25,6 +25,8 @@ export const mockApiService = {
             mockDataExtension = {
                 name: "Transactional_Journey_API_Entry",
                 externalKey: deExternalKey,
+                sendableDeField: "SubscriberKey",
+                sendableSubscriberField: "_SubscriberKey",
                 fields: [
                     {
                         "Name": "SubscriberKey",
