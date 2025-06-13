@@ -10,20 +10,44 @@ export const TestListConfigProvider = ({ children }) => {
     const [varianceData, setVarianceData] = useState('')
     const [testData, setTestData] = useState('')
 
-    const selectField = (field) => {
-        if (!isFieldSelected(field)) {
+    const selectVariantField = (field) => {
+        if (!variantFields.includes(field)) {
             setVariantFields(prev => [...prev, field])
         }
     }
 
-    const unselectField = (field) => {
-        if (isFieldSelected(field)) {
+    const selectTestDataField = (field) => {
+        if (!testDataFields.includes(field)) {
+            setTestDataFields(prev => [...prev, field])
+        }
+    }
+
+    const unselectVariantField = (field) => {
+        if (variantFields.includes(field)) {
             setVariantFields(prev => prev.filter(f => f !== field))
         }
     }
 
+    const unselectTestDataField = (field) => {
+        if (testDataFields.includes(field)) {
+            setTestDataFields(prev => prev.filter(f => f !== field))
+        }
+    }
+
     const clearVariantFields = () => {
-        setVariantFields([]);
+        setVariantFields([])
+    }
+
+    const clearTestDataFields = () => {
+        setTestDataFields([])
+    }
+
+    const isVariantFieldSelected = (field) => {
+        return variantFields.includes(field);
+    }
+
+    const isTestDataFieldSelected = (field) => {
+        return testDataFields.includes(field);
     }
 
     const setSelectedDe = (userSelectedDe) => {
@@ -31,27 +55,37 @@ export const TestListConfigProvider = ({ children }) => {
         setSelectedDeState(userSelectedDe);
     }
 
-    const isFieldSelected = (field) => {
-        return variantFields.includes(field);
-    }
-
     const clearAll = () => {
         setSelectedDeState(null);
-        clearVariantFields();
+        setMode(null)
+        setVariantFields([]);
+        setTestDataFields([]);
+        setVarianceData('')
+        setTestData('')
     }
-
 
     return (
         <TestListConfigContext.Provider
             value={{
                 selectedDe,
                 variantFields,
-                selectField,
-                unselectField,
+                testDataFields,
+                varianceData,
+                testData,
+                mode,
+                selectVariantField,
+                selectTestDataField,
+                unselectVariantField,
+                unselectTestDataField,
                 clearVariantFields,
+                clearTestDataFields,
+                isVariantFieldSelected,
+                isTestDataFieldSelected,
                 setSelectedDe,
-                isFieldSelected,
                 clearAll,
+                setMode,
+                setVarianceData,
+                setTestData
             }}>
             {children}
         </TestListConfigContext.Provider>
@@ -61,7 +95,7 @@ export const TestListConfigProvider = ({ children }) => {
 export const useTestListConfig = () => {
     const context = useContext(TestListConfigContext);
     if (!context) {
-        throw new Error('useProdDataExtension must be used within ProdDataExtensionProvider')
+        throw new Error('useTestListConfig must be used within TestListConfigProvider')
     }
     return context;
 }

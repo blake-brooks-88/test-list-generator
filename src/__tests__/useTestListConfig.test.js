@@ -1,4 +1,4 @@
-import { renderHook, act, render } from '@testing-library/react'
+import { renderHook, act } from '@testing-library/react'
 import { useTestListConfig, TestListConfigProvider } from '../hooks/useTestListConfig'
 
 const renderUseProgress = () => {
@@ -6,116 +6,273 @@ const renderUseProgress = () => {
         <TestListConfigProvider>
             {children}
         </TestListConfigProvider>
-    )
+    );
     return renderHook(() => useTestListConfig(), { wrapper });
+};
+
+function testVariantFieldBehavior(result) {
+    const getFields = () => result.current.variantFields;
+    const select = (field) => act(() => result.current.selectVariantField(field));
+    const unselect = (field) => act(() => result.current.unselectVariantField(field));
+    const clear = () => act(() => result.current.clearVariantFields());
+    const isSelected = (field) => result.current.isVariantFieldSelected(field);
+    return { getFields, select, unselect, clear, isSelected };
 }
 
+function testTestDataFieldBehavior(result) {
+    const getFields = () => result.current.testDataFields;
+    const select = (field) => act(() => result.current.selectTestDataField(field));
+    const unselect = (field) => act(() => result.current.unselectTestDataField(field));
+    const clear = () => act(() => result.current.clearTestDataFields());
+    const isSelected = (field) => result.current.isTestDataFieldSelected(field);
+    return { getFields, select, unselect, clear, isSelected };
+}
 
 describe('useTestListConfig', () => {
     test('should have initial state', () => {
-
-        const { result } = renderUseProgress()
+        const { result } = renderUseProgress();
 
         expect(result.current.selectedDe).toBe(null);
         expect(result.current.variantFields).toEqual([]);
-        expect(typeof result.current.selectField).toBe('function');
-        expect(typeof result.current.unselectField).toBe('function');
+        expect(result.current.testDataFields).toEqual([]);
+        expect(result.current.mode).toBe(null);
+        expect(result.current.testData).toBe('');
+        expect(result.current.varianceData).toBe('');
+
+        expect(typeof result.current.selectVariantField).toBe('function');
+        expect(typeof result.current.selectTestDataField).toBe('function');
+        expect(typeof result.current.unselectVariantField).toBe('function');
+        expect(typeof result.current.unselectTestDataField).toBe('function');
         expect(typeof result.current.clearVariantFields).toBe('function');
+        expect(typeof result.current.clearTestDataFields).toBe('function');
         expect(typeof result.current.setSelectedDe).toBe('function');
-        expect(typeof result.current.isFieldSelected).toBe('function');
+        expect(typeof result.current.isVariantFieldSelected).toBe('function');
+        expect(typeof result.current.isTestDataFieldSelected).toBe('function');
         expect(typeof result.current.clearAll).toBe('function');
     });
 
-    test('select field adds field to selected fields', () => {
+    describe('variantFields field logic', () => {
+        test('select field adds field to selected fields', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
 
-        const { result } = renderUseProgress()
-
-        expect(result.current.variantFields).toEqual([]);
-
-        act(() => {
-            result.current.selectField("FirstName");
+            config.select("FirstName");
+            expect(config.getFields()).toContain("FirstName");
         });
 
-        expect(result.current.variantFields).toHaveLength(1);
-        expect(result.current.variantFields[0]).toBe("FirstName");
+        test('select field only adds field once', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            config.select("FirstName");
+            config.select("FirstName");
+            expect(config.getFields()).toEqual(["FirstName"]);
+        });
+
+        test('unselect field removes selected field', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            config.select("FirstName");
+            config.unselect("FirstName");
+            expect(config.getFields()).not.toContain("FirstName");
+        });
+
+        test('clearFields clears all selected fields', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            config.select("FirstName");
+            config.select("LastName");
+            config.select("Email");
+
+            config.clear();
+            expect(config.getFields()).toEqual([]);
+        });
+
+        test('isFieldSelected returns correct values', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            expect(config.isSelected("FirstName")).toBe(false);
+            config.select("FirstName");
+            expect(config.isSelected("FirstName")).toBe(true);
+        });
+
+        test('unselectField handles non-existent field gracefully', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            config.unselect("DoesNotExist");
+            expect(config.getFields()).toEqual([]);
+        });
+
+        test('field operations with special characters and edge cases', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            config.select("");
+            config.select("Field With Spaces");
+            config.select("!@#SpecialChars123");
+
+            expect(config.getFields()).toEqual(["", "Field With Spaces", "!@#SpecialChars123"]);
+        });
+
+        test('field list resets after setting new DE', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            const firstDE = { name: "DE1", externalKey: "key1", fields: [] };
+            const secondDE = { name: "DE2", externalKey: "key2", fields: [] };
+
+            act(() => result.current.setSelectedDe(firstDE));
+            config.select("Email");
+            config.select("FirstName");
+            expect(config.getFields().length).toBe(2);
+
+            act(() => result.current.setSelectedDe(secondDE));
+            expect(config.getFields()).toEqual([]);
+        });
+
+        test('field list resets when DE is set to null', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            const exampleDE = { name: "DE1", externalKey: "key1", fields: [] };
+
+            act(() => result.current.setSelectedDe(exampleDE));
+            config.select("Email");
+            expect(config.getFields()).toHaveLength(1);
+
+            act(() => result.current.setSelectedDe(null));
+            expect(config.getFields()).toEqual([]);
+        });
+
+        test('clearAll resets selected fields', () => {
+            const { result } = renderUseProgress();
+            const config = testVariantFieldBehavior(result);
+
+            config.select("A");
+            config.select("B");
+            expect(config.getFields().length).toBe(2);
+
+            act(() => result.current.clearAll());
+            expect(config.getFields()).toEqual([]);
+        });
     });
 
-    test('select field only adds field once', () => {
+    describe('testDataFields field logic', () => {
+        test('select field adds field to selected fields', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
 
-        const { result } = renderUseProgress()
-
-        expect(result.current.variantFields).toEqual([]);
-
-        act(() => {
-            result.current.selectField("FirstName");
+            config.select("FirstName");
+            expect(config.getFields()).toContain("FirstName");
         });
 
-        expect(result.current.variantFields).toHaveLength(1);
-        expect(result.current.variantFields[0]).toBe("FirstName");
+        test('select field only adds field once', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
 
-        act(() => {
-            result.current.selectField("FirstName");
+            config.select("FirstName");
+            config.select("FirstName");
+            expect(config.getFields()).toEqual(["FirstName"]);
         });
 
-        expect(result.current.variantFields).toHaveLength(1);
-        expect(result.current.variantFields[0]).toBe("FirstName");
-    });
+        test('unselect field removes selected field', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
 
-    test('unselect field removes selected field', () => {
-
-        const { result } = renderUseProgress()
-
-        expect(result.current.variantFields).toEqual([]);
-
-        act(() => {
-            result.current.selectField("FirstName");
+            config.select("FirstName");
+            config.unselect("FirstName");
+            expect(config.getFields()).not.toContain("FirstName");
         });
 
-        expect(result.current.variantFields).toHaveLength(1);
-        expect(result.current.variantFields[0]).toBe("FirstName");
+        test('clearFields clears all selected fields', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
 
-        act(() => {
-            result.current.unselectField("FirstName");
+            config.select("FirstName");
+            config.select("LastName");
+            config.select("Email");
+
+            config.clear();
+            expect(config.getFields()).toEqual([]);
         });
 
-        expect(result.current.variantFields).toHaveLength(0);
-        expect(result.current.variantFields[0]).toBe(undefined);
-    });
+        test('isFieldSelected returns correct values', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
 
-    test('clearVariantFields clears all selected fields', () => {
-
-        const { result } = renderUseProgress()
-
-        expect(result.current.variantFields).toEqual([]);
-
-        act(() => {
-            result.current.selectField("FirstName");
+            expect(config.isSelected("FirstName")).toBe(false);
+            config.select("FirstName");
+            expect(config.isSelected("FirstName")).toBe(true);
         });
 
-        act(() => {
-            result.current.selectField("LastName");
+        test('unselectField handles non-existent field gracefully', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
+
+            config.unselect("DoesNotExist");
+            expect(config.getFields()).toEqual([]);
         });
 
-        act(() => {
-            result.current.selectField("State");
+        test('field operations with special characters and edge cases', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
+
+            config.select("");
+            config.select("Field With Spaces");
+            config.select("!@#SpecialChars123");
+
+            expect(config.getFields()).toEqual(["", "Field With Spaces", "!@#SpecialChars123"]);
         });
 
-        expect(result.current.variantFields).toHaveLength(3);
-        expect(result.current.variantFields[0]).toBe("FirstName");
-        expect(result.current.variantFields[1]).toBe("LastName");
-        expect(result.current.variantFields[2]).toBe("State");
+        test('field list resets after setting new DE', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
 
-        act(() => {
-            result.current.clearVariantFields();
+            const firstDE = { name: "DE1", externalKey: "key1", fields: [] };
+            const secondDE = { name: "DE2", externalKey: "key2", fields: [] };
+
+            act(() => result.current.setSelectedDe(firstDE));
+            config.select("Email");
+            config.select("FirstName");
+            expect(config.getFields().length).toBe(2);
+
+            act(() => result.current.setSelectedDe(secondDE));
+            expect(config.getFields()).toEqual([]);
         });
 
-        expect(result.current.variantFields).toHaveLength(0);
-        expect(result.current.variantFields[0]).toBe(undefined);
+        test('field list resets when DE is set to null', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
+
+            const exampleDE = { name: "DE1", externalKey: "key1", fields: [] };
+
+            act(() => result.current.setSelectedDe(exampleDE));
+            config.select("Email");
+            expect(config.getFields()).toHaveLength(1);
+
+            act(() => result.current.setSelectedDe(null));
+            expect(config.getFields()).toEqual([]);
+        });
+
+        test('clearAll resets selected fields', () => {
+            const { result } = renderUseProgress();
+            const config = testTestDataFieldBehavior(result);
+
+            config.select("A");
+            config.select("B");
+            expect(config.getFields().length).toBe(2);
+
+            act(() => result.current.clearAll());
+            expect(config.getFields()).toEqual([]);
+        });
     });
 
     test('setSelectedDE stores DE data correctly', () => {
-
-        const { result } = renderUseProgress()
+        const { result } = renderUseProgress();
 
         const exampleDE = {
             name: "Transactional_Journey_API_Entry",
@@ -123,42 +280,12 @@ describe('useTestListConfig', () => {
             sendableDeField: "SubscriberKey",
             sendableSubscriberField: "_SubscriberKey",
             fields: [
-                {
-                    Name: "SubscriberKey",
-                    FieldType: "Text",
-                    MaxLength: 50,
-                    IsRequired: true
-                },
-                {
-                    Name: "eventInstanceId",
-                    FieldType: "Text",
-                    MaxLength: 50,
-                    IsRequired: true
-                },
-                {
-                    Name: "Email",
-                    FieldType: "EmailAddress",
-                    MaxLength: 254,
-                    IsRequired: false
-                },
-                {
-                    Name: "ContactKey",
-                    FieldType: "Text",
-                    MaxLength: 50,
-                    IsRequired: true
-                },
-                {
-                    Name: "Last_Name",
-                    FieldType: "Text",
-                    MaxLength: 150,
-                    IsRequired: false
-                },
-                {
-                    Name: "First_Name",
-                    FieldType: "Text",
-                    MaxLength: 150,
-                    IsRequired: false
-                }
+                { Name: "SubscriberKey", FieldType: "Text", MaxLength: 50, IsRequired: true },
+                { Name: "eventInstanceId", FieldType: "Text", MaxLength: 50, IsRequired: true },
+                { Name: "Email", FieldType: "EmailAddress", MaxLength: 254, IsRequired: false },
+                { Name: "ContactKey", FieldType: "Text", MaxLength: 50, IsRequired: true },
+                { Name: "Last_Name", FieldType: "Text", MaxLength: 150, IsRequired: false },
+                { Name: "First_Name", FieldType: "Text", MaxLength: 150, IsRequired: false }
             ]
         };
 
@@ -169,50 +296,20 @@ describe('useTestListConfig', () => {
         expect(result.current.selectedDe).toEqual(exampleDE);
     });
 
-    test('isFieldSelected returns true for selected field', () => {
+    test('clearAll resets selectedDE and both field sets', () => {
         const { result } = renderUseProgress();
 
-        expect(result.current.isFieldSelected("FirstName")).toBe(false);
-
-        act(() => {
-            result.current.selectField("FirstName");
-        });
-
-        expect(result.current.isFieldSelected("FirstName")).toBe(true);
-        expect(result.current.isFieldSelected("LastName")).toBe(false);
-    });
-
-    test('isFieldSelected returns false for non-selected field', () => {
-        const { result } = renderUseProgress();
-
-        act(() => {
-            result.current.selectField("FirstName");
-            result.current.selectField("Email");
-        });
-
-        expect(result.current.isFieldSelected("FirstName")).toBe(true);
-        expect(result.current.isFieldSelected("Email")).toBe(true);
-        expect(result.current.isFieldSelected("LastName")).toBe(false);
-        expect(result.current.isFieldSelected("NonExistentField")).toBe(false);
-    });
-
-    test('clearAll resets both selectedDE and variantFields', () => {
-        const { result } = renderUseProgress();
-
-        const exampleDE = {
-            name: "Test DE",
-            externalKey: "test-key",
-            fields: []
-        };
+        const exampleDE = { name: "Test DE", externalKey: "test-key", fields: [] };
 
         act(() => {
             result.current.setSelectedDe(exampleDE);
-            result.current.selectField("FirstName");
-            result.current.selectField("Email");
+            result.current.selectVariantField("FirstName");
+            result.current.selectTestDataField("Email");
         });
 
         expect(result.current.selectedDe).toEqual(exampleDE);
-        expect(result.current.variantFields).toHaveLength(2);
+        expect(result.current.variantFields).toHaveLength(1);
+        expect(result.current.testDataFields).toHaveLength(1);
 
         act(() => {
             result.current.clearAll();
@@ -220,110 +317,93 @@ describe('useTestListConfig', () => {
 
         expect(result.current.selectedDe).toBe(null);
         expect(result.current.variantFields).toEqual([]);
+        expect(result.current.testDataFields).toEqual([]);
     });
 
-    test('setSelectedDE clears selected fields when setting new DE', () => {
+    test('setMode sets the mode', () => {
         const { result } = renderUseProgress();
 
-        const firstDE = {
-            name: "First DE",
-            externalKey: "first-key",
-            fields: []
-        };
+        act(() => {
+            result.current.setMode(prev => "test")
+        })
 
-        const secondDE = {
-            name: "Second DE",
-            externalKey: "second-key",
-            fields: []
-        };
+        expect(result.current.mode).toEqual("test");
+    })
+
+    test('setVarianceData sets the varianceData', () => {
+        const { result } = renderUseProgress();
+
+        act(() => {
+            result.current.setVarianceData(prev => "test")
+        })
+
+        expect(result.current.varianceData).toEqual("test");
+    })
+
+    test('setTestData sets the testData', () => {
+        const { result } = renderUseProgress();
+
+        act(() => {
+            result.current.setTestData(prev => "test")
+        })
+
+        expect(result.current.testData).toEqual("test");
+    })
+
+    test('clearAll resets mode to null', () => {
+        const { result } = renderUseProgress();
+
+        act(() => {
+            result.current.setMode('sample');
+        });
+
+        expect(result.current.mode).toBe('sample');
+
+        act(() => {
+            result.current.clearAll();
+        });
+
+        expect(result.current.mode).toBe(null);
+    });
+
+    test('clearAll resets CSV data', () => {
+        const { result } = renderUseProgress();
+
+        act(() => {
+            result.current.setVarianceData('variance,data\nval1,val2');
+            result.current.setTestData('test,data\ntest1,test2');
+        });
+
+        expect(result.current.varianceData).toBe('variance,data\nval1,val2');
+        expect(result.current.testData).toBe('test,data\ntest1,test2');
+
+        act(() => {
+            result.current.clearAll();
+        });
+
+        expect(result.current.varianceData).toBe('');
+        expect(result.current.testData).toBe('');
+    });
+
+    test('setSelectedDE clears CSV data', () => {
+        const { result } = renderUseProgress();
+
+        const firstDE = { name: "DE1", externalKey: "key1", fields: [] };
+        const secondDE = { name: "DE2", externalKey: "key2", fields: [] };
 
         act(() => {
             result.current.setSelectedDe(firstDE);
-            result.current.selectField("FirstName");
-            result.current.selectField("Email");
+            result.current.setVarianceData('old data');
+            result.current.setTestData('old test data');
         });
-
-        expect(result.current.selectedDe).toEqual(firstDE);
-        expect(result.current.variantFields).toHaveLength(2);
 
         act(() => {
             result.current.setSelectedDe(secondDE);
         });
 
-        expect(result.current.selectedDe).toEqual(secondDE);
-        expect(result.current.variantFields).toEqual([]);
+        expect(result.current.varianceData).toBe('');
+        expect(result.current.testData).toBe('');
     });
 
-    test('setSelectedDE handles null value', () => {
-        const { result } = renderUseProgress();
 
-        const exampleDE = {
-            name: "Test DE",
-            externalKey: "test-key",
-            fields: []
-        };
-
-        act(() => {
-            result.current.setSelectedDe(exampleDE);
-            result.current.selectField("FirstName");
-        });
-
-        expect(result.current.selectedDe).toEqual(exampleDE);
-        expect(result.current.variantFields).toHaveLength(1);
-
-        act(() => {
-            result.current.setSelectedDe(null);
-        });
-
-        expect(result.current.selectedDe).toBe(null);
-        expect(result.current.variantFields).toEqual([]);
-    });
-
-    test('multiple field operations work correctly', () => {
-        const { result } = renderUseProgress();
-
-        act(() => {
-            result.current.selectField("FirstName");
-            result.current.selectField("LastName");
-            result.current.selectField("Email");
-        });
-
-        expect(result.current.variantFields).toHaveLength(3);
-        expect(result.current.isFieldSelected("FirstName")).toBe(true);
-        expect(result.current.isFieldSelected("LastName")).toBe(true);
-        expect(result.current.isFieldSelected("Email")).toBe(true);
-
-        act(() => {
-            result.current.unselectField("LastName");
-        });
-
-        expect(result.current.variantFields).toHaveLength(2);
-        expect(result.current.isFieldSelected("FirstName")).toBe(true);
-        expect(result.current.isFieldSelected("LastName")).toBe(false);
-        expect(result.current.isFieldSelected("Email")).toBe(true);
-    });
-
-    test('unselectField handles non-existent field gracefully', () => {
-        const { result } = renderUseProgress();
-
-        act(() => {
-            result.current.unselectField("NonExistentField");
-        });
-
-        expect(result.current.variantFields).toEqual([]);
-    });
-
-    test('field operations with empty strings and special characters', () => {
-        const { result } = renderUseProgress();
-
-        act(() => {
-            result.current.selectField("");
-            result.current.selectField("Field With Spaces");
-            result.current.selectField("Field_With_Underscores");
-        });
-
-        expect(result.current.variantFields).toHaveLength(3);
-        expect(result.current.isFieldSelected("")).toBe(true);
-    });
-
-})
+});
