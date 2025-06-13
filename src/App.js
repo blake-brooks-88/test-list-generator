@@ -1,10 +1,21 @@
+import AppContainer from "./components/layout/AppContainer";
+import AppHeader from "./components/layout/AppHeader";
+import ProgressIndicator from "./components/layout/ProgressIndicator";
+import StepLayout from "./components/layout/StepLayout";
+import { ProgressProvider } from "./hooks/useProgress";
+
 function App() {
   return (
-    <div className="min-h-screen bg-blue-500 flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-white">
-        Test List Generator - Ready to Build!
-      </h1>
-    </div>
+    <AppContainer>
+      <AppHeader
+        headerText="Test Data Generator"
+        subheaderText="A powerful tool to create comprehensive test data for your Marketing Cloud Engagement campaigns."
+      />
+      <ProgressProvider>
+        <ProgressIndicator />
+        <StepLayout />
+      </ProgressProvider>
+    </AppContainer>
   );
 }
 

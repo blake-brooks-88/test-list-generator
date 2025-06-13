@@ -29,24 +29,24 @@ describe('useProgress', () => {
         expect(result.current.currentStep).toBe(2);
     })
 
-    test('nextStep doesnt increment when current step is equal to 4', () => {
+    test('nextStep doesnt increment beyond max step', () => {
         const { result } = renderUseProgress();
 
         expect(result.current.currentStep).toBe(1);
 
         act(() => {
-            result.current.nextStep();
-            result.current.nextStep();
-            result.current.nextStep();
+            for (let i = 1; i < result.current.maxSteps; i++) {
+                result.current.nextStep();
+            }
         });
 
-        expect(result.current.currentStep).toBe(4);
+        expect(result.current.currentStep).toBe(result.current.maxSteps);
 
         act(() => {
             result.current.nextStep();
         });
 
-        expect(result.current.currentStep).toBe(4);
+        expect(result.current.currentStep).toBe(result.current.maxSteps);
     })
 
     test('previousStep decrements currentStep from 4 to 3', () => {
