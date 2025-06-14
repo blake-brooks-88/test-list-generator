@@ -1,162 +1,168 @@
-import { renderHook, act, render } from '@testing-library/react'
-import { useProgress, ProgressProvider } from '../hooks/useProgress'
+import { renderHook, act, render } from "@testing-library/react";
+import { STEPS_ARRAY } from "../constants/constants";
+import { useProgress, ProgressProvider } from "../hooks/useProgress";
 
 const renderUseProgress = () => {
-    const wrapper = ({ children }) => (
-        <ProgressProvider>
-            {children}
-        </ProgressProvider>
-    )
-    return renderHook(() => useProgress(), { wrapper });
-}
+  const wrapper = ({ children }) => (
+    <ProgressProvider>{children}</ProgressProvider>
+  );
+  return renderHook(() => useProgress(), { wrapper });
+};
 
-describe('useProgress', () => {
-    test('currentStep initial state is 1', () => {
-        const { result } = renderUseProgress();
+describe("useProgress", () => {
+  test("initial state", () => {
+    const { result } = renderUseProgress();
 
-        expect(result.current.currentStep).toBe(1);
-    })
+    expect(result.current.currentStep).toBe(1);
+    expect(result.current.maxSteps).toBe(STEPS_ARRAY.length);
+    expect(result.current.canProceedToNextStep).toBe(false);
+  });
 
-    test('nextStep increments currentStep from 1 to 2', () => {
-        const { result } = renderUseProgress();
+  test("setCanProceedToNextStep updates to true", () => {
+    const { result } = renderUseProgress();
 
-        expect(result.current.currentStep).toBe(1);
+    act(() => {
+      result.current.setCanProceedToNextStep(true);
+    });
 
-        act(() => {
-            result.current.nextStep();
-        });
+    expect(result.current.canProceedToNextStep).toBe(true);
+  });
 
-        expect(result.current.currentStep).toBe(2);
-    })
+  test("nextStep increments currentStep from 1 to 2", () => {
+    const { result } = renderUseProgress();
 
-    test('nextStep doesnt increment beyond max step', () => {
-        const { result } = renderUseProgress();
+    expect(result.current.currentStep).toBe(1);
 
-        expect(result.current.currentStep).toBe(1);
+    act(() => {
+      result.current.nextStep();
+    });
 
-        act(() => {
-            for (let i = 1; i < result.current.maxSteps; i++) {
-                result.current.nextStep();
-            }
-        });
+    expect(result.current.currentStep).toBe(2);
+  });
 
-        expect(result.current.currentStep).toBe(result.current.maxSteps);
+  test("nextStep doesnt increment beyond max step", () => {
+    const { result } = renderUseProgress();
 
-        act(() => {
-            result.current.nextStep();
-        });
+    expect(result.current.currentStep).toBe(1);
 
-        expect(result.current.currentStep).toBe(result.current.maxSteps);
-    })
+    act(() => {
+      for (let i = 1; i < result.current.maxSteps; i++) {
+        result.current.nextStep();
+      }
+    });
 
-    test('previousStep decrements currentStep from 4 to 3', () => {
-        const { result } = renderUseProgress();
+    expect(result.current.currentStep).toBe(result.current.maxSteps);
 
-        expect(result.current.currentStep).toBe(1);
+    act(() => {
+      result.current.nextStep();
+    });
 
-        act(() => {
-            result.current.nextStep();
-            result.current.nextStep();
-            result.current.nextStep();
-        });
+    expect(result.current.currentStep).toBe(result.current.maxSteps);
+  });
 
-        expect(result.current.currentStep).toBe(4);
+  test("previousStep decrements currentStep from 4 to 3", () => {
+    const { result } = renderUseProgress();
 
-        act(() => {
-            result.current.previousStep();
-        });
+    expect(result.current.currentStep).toBe(1);
 
-        expect(result.current.currentStep).toBe(3);
-    })
+    act(() => {
+      result.current.nextStep();
+      result.current.nextStep();
+      result.current.nextStep();
+    });
 
-    test('previousStep doesnt decrement currentStep when current step is = 1', () => {
-        const { result } = renderUseProgress();
+    expect(result.current.currentStep).toBe(4);
 
-        expect(result.current.currentStep).toBe(1);
+    act(() => {
+      result.current.previousStep();
+    });
 
-        act(() => {
-            result.current.previousStep();
-        });
+    expect(result.current.currentStep).toBe(3);
+  });
 
-        expect(result.current.currentStep).toBe(1);
+  test("previousStep doesnt decrement currentStep when current step is = 1", () => {
+    const { result } = renderUseProgress();
 
-    })
+    expect(result.current.currentStep).toBe(1);
 
-    test('goToStep goes to specified step', () => {
-        const { result } = renderUseProgress();
+    act(() => {
+      result.current.previousStep();
+    });
 
-        expect(result.current.currentStep).toBe(1);
+    expect(result.current.currentStep).toBe(1);
+  });
 
-        act(() => {
-            result.current.nextStep();
-            result.current.nextStep();
-            result.current.nextStep();
-        });
+  test("goToStep goes to specified step", () => {
+    const { result } = renderUseProgress();
 
-        expect(result.current.currentStep).toBe(4);
+    expect(result.current.currentStep).toBe(1);
 
-        act(() => {
-            result.current.goToStep(2);
-        });
+    act(() => {
+      result.current.nextStep();
+      result.current.nextStep();
+      result.current.nextStep();
+    });
 
-        expect(result.current.currentStep).toBe(2);
+    expect(result.current.currentStep).toBe(4);
 
-    })
+    act(() => {
+      result.current.goToStep(2);
+    });
 
-    test('goToStep cannot go forward a step', () => {
-        const { result } = renderUseProgress();
+    expect(result.current.currentStep).toBe(2);
+  });
 
-        expect(result.current.currentStep).toBe(1);
+  test("goToStep cannot go forward a step", () => {
+    const { result } = renderUseProgress();
 
-        act(() => {
-            result.current.goToStep(2);
-        });
+    expect(result.current.currentStep).toBe(1);
 
-        expect(result.current.currentStep).toBe(1);
+    act(() => {
+      result.current.goToStep(2);
+    });
 
-    })
+    expect(result.current.currentStep).toBe(1);
+  });
 
-    test('goToStep cannot go below 0', () => {
-        const { result } = renderUseProgress();
+  test("goToStep cannot go below 0", () => {
+    const { result } = renderUseProgress();
 
-        expect(result.current.currentStep).toBe(1);
+    expect(result.current.currentStep).toBe(1);
 
-        act(() => {
-            result.current.goToStep(-1);
-        });
+    act(() => {
+      result.current.goToStep(-1);
+    });
 
-        expect(result.current.currentStep).toBe(1);
+    expect(result.current.currentStep).toBe(1);
 
-        act(() => {
-            result.current.goToStep(0);
-        });
+    act(() => {
+      result.current.goToStep(0);
+    });
 
-        expect(result.current.currentStep).toBe(1);
+    expect(result.current.currentStep).toBe(1);
 
-        act(() => {
-            result.current.goToStep(-999);
-        });
+    act(() => {
+      result.current.goToStep(-999);
+    });
 
-        expect(result.current.currentStep).toBe(1);
+    expect(result.current.currentStep).toBe(1);
+  });
 
-    })
+  test("goToStep only accepts integers", () => {
+    const { result } = renderUseProgress();
 
-    test('goToStep only accepts integers', () => {
-        const { result } = renderUseProgress();
+    expect(result.current.currentStep).toBe(1);
 
-        expect(result.current.currentStep).toBe(1);
+    act(() => {
+      result.current.goToStep(2.5);
+    });
 
-        act(() => {
-            result.current.goToStep(2.5);
-        });
+    expect(result.current.currentStep).toBe(1);
 
-        expect(result.current.currentStep).toBe(1);
+    act(() => {
+      result.current.goToStep("testing testing");
+    });
 
-        act(() => {
-            result.current.goToStep("testing testing");
-        });
-
-        expect(result.current.currentStep).toBe(1);
-
-    })
-})
+    expect(result.current.currentStep).toBe(1);
+  });
+});

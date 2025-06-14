@@ -1,10 +1,14 @@
 import React, { createContext, useState, useContext } from "react";
+import { STEPS_ARRAY } from "../constants/constants";
 
 const UseProgressContext = createContext();
 
 export const ProgressProvider = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [maxSteps] = useState(5);
+  const [maxSteps] = useState(STEPS_ARRAY.length);
+  const [canProceedToNextStep, setCanProceedToNextStep] = useState(false);
+  // make sure you implement a useEffect that validates each component's state and
+  // sets canProceedToNextStep to true if all steps were met
 
   const nextStep = () => {
     if (currentStep < maxSteps) {
@@ -39,6 +43,8 @@ export const ProgressProvider = ({ children }) => {
         previousStep,
         goToStep,
         maxSteps,
+        canProceedToNextStep,
+        setCanProceedToNextStep,
       }}
     >
       {children}

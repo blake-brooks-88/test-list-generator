@@ -1,20 +1,26 @@
+import Logo from "./components/common/Logo";
 import AppContainer from "./components/layout/AppContainer";
+import AppFooter from "./components/layout/AppFooter";
 import AppHeader from "./components/layout/AppHeader";
+import MainContent from "./components/layout/MainContent";
 import ProgressIndicator from "./components/layout/ProgressIndicator";
+import SideBar from "./components/layout/SideBar";
+import SidebarSummary from "./components/layout/SidebarSummary";
 import StepLayout from "./components/layout/StepLayout";
-import { ProgressProvider } from "./hooks/useProgress";
 
 function App() {
   return (
     <AppContainer>
-      <AppHeader
-        headerText="Test Data Generator"
-        subheaderText="A powerful tool to create comprehensive test data for your Marketing Cloud Engagement campaigns."
-      />
-      <ProgressProvider>
+      <SideBar>
+        <Logo />
         <ProgressIndicator />
+        <SidebarSummary />
+      </SideBar>
+      <MainContent>
+        <AppHeader />
         <StepLayout />
-      </ProgressProvider>
+        <AppFooter />
+      </MainContent>
     </AppContainer>
   );
 }

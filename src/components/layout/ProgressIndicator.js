@@ -1,43 +1,25 @@
 import React from "react";
+import { STEPS_ARRAY } from "../../constants/constants";
 import { useProgress } from "../../hooks/useProgress";
 import StepIcon from "../steps/StepIcon";
 
 function ProgressIndicator() {
-  const { currentStep, maxSteps } = useProgress();
-  const stepsArray = Array(maxSteps)
-    .fill(1)
-    .map((e, i) => e + i * 1);
+  const { currentStep } = useProgress();
+
   return (
-    <div className="flex">
-      {stepsArray.map((step) =>
-        step < maxSteps ? (
-          <div className="flex justify-center items-center">
-            <StepIcon
-              key={step}
-              stepNumber={step}
-              isComplete={step < currentStep}
-              isActive={step === currentStep}
-              isInactive={step > currentStep}
-            />
-            <div
-              className={`
-                    h-1 
-                    w-16 
-                    ${step < currentStep ? "bg-primary-600" : "bg-mygray-200 "}
-                    mx-4
-                    `}
-            ></div>
-          </div>
-        ) : (
+    <div className={`border-b py-6 border-slate-200`}>
+      {STEPS_ARRAY.map((step, index) => (
+        <div className="flex">
           <StepIcon
-            key={step}
-            stepNumber={step}
-            isComplete={step < currentStep}
-            isActive={step === currentStep}
-            isInactive={step > currentStep}
+            key={index}
+            stepNumber={index + 1}
+            isComplete={index + 1 < currentStep}
+            isActive={index + 1 === currentStep}
+            isInactive={index + 1 > currentStep}
+            stepText={step}
           />
-        )
-      )}
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,12 +1,12 @@
-import React from 'react'
+import React from "react";
 
-function AppHeader({ headerText, subheaderText }) {
-    return (
-        <div className="flex flex-col">
-            <h1>{headerText}</h1>
-            <p>{subheaderText}</p>
-        </div>
-    )
+function AppHeader() {
+  return (
+    <div className="flex flex-col border-b border-slate-200 h-18">
+      <h1>Salesforce Marketing Cloud</h1>
+      <p>Test Data Generator</p>
+    </div>
+  );
 }
 
-export default AppHeader
+export default AppHeader;

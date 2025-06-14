@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function StepLayout() {
-    return (
-        <div>StepLayout</div>
-    )
+  return <div className="flex-1 bg-secondary-50">StepLayout</div>;
 }
 
-export default StepLayout
+export default StepLayout;
