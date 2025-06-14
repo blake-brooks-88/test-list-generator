@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ProgressProvider } from "./hooks/useProgress";
+import { TestListConfigProvider } from "./hooks/useTestListConfig";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ProgressProvider>
-      <App />
+      <TestListConfigProvider>
+        <App />
+      </TestListConfigProvider>
     </ProgressProvider>
   </React.StrictMode>
 );

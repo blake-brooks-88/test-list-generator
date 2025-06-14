@@ -4,19 +4,19 @@ import { useProgress } from "../../hooks/useProgress";
 import StepIcon from "../steps/StepIcon";
 
 function ProgressIndicator() {
-  const { currentStep } = useProgress();
+  const { currentStep, goToStep } = useProgress();
 
   return (
-    <div className={`border-b py-6 border-slate-200`}>
+    <div className={`border-b mb-4 py-6 border-slate-200`}>
       {STEPS_ARRAY.map((step, index) => (
-        <div className="flex">
+        <div key={index} className="flex">
           <StepIcon
-            key={index}
             stepNumber={index + 1}
             isComplete={index + 1 < currentStep}
             isActive={index + 1 === currentStep}
             isInactive={index + 1 > currentStep}
             stepText={step}
+            onClick={() => goToStep(index + 1)}
           />
         </div>
       ))}
