@@ -8,8 +8,8 @@ function StepIcon({ stepNumber, isActive, isInactive, stepText, isComplete }) {
         isActive
           ? "bg-gradient-to-r flex-1 from-primary-50 to-info-50 text-primary-700 shadow-sm"
           : isComplete
-          ? "text-secondary-600 hover:bg-secondary-50"
-          : "text-secondary-400"
+          ? "text-secondary-600 flex-1 hover:bg-secondary-50"
+          : "text-secondary-400 flex-1"
       }`}
     >
       <span

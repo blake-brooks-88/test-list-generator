@@ -17,7 +17,7 @@ function App() {
         <SidebarSummary />
       </SideBar>
       <MainContent>
-        <AppHeader />
+        {/* <AppHeader /> */}
         <StepLayout />
         <AppFooter />
       </MainContent>

@@ -5,13 +5,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ProgressProvider } from "./hooks/useProgress";
 import { TestListConfigProvider } from "./hooks/useTestListConfig";
+import { DataExtensionProvider } from "./hooks/useDataExtensionApi";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ProgressProvider>
       <TestListConfigProvider>
-        <App />
+        <DataExtensionProvider>
+          <App />
+        </DataExtensionProvider>
       </TestListConfigProvider>
     </ProgressProvider>
   </React.StrictMode>
