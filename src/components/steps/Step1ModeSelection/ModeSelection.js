@@ -17,7 +17,7 @@ function ModeSelection() {
   };
 
   return (
-    <div onClick={handleContainerClick} className={`h-full`}>
+    <div onClick={handleContainerClick} className={`h-full flex-grow`}>
       <StepHeading
         title="Choose Your Test Strategy"
         subHeading="What type of test list would you like to generate? Your choice will determine the source of your data."

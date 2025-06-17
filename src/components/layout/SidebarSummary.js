@@ -6,6 +6,9 @@ function SidebarSummary() {
   return (
     <div className="">
       <p className="uppercase text-xs text-secondary-400">Summary</p>
+      <p className="">
+        Mode <span>{mode}</span>
+      </p>
     </div>
   );
 }

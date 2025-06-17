@@ -16,7 +16,7 @@ function AppFooter() {
   const pendingMessage = "Complete this step to continue";
   return (
     <footer
-      className={`border-t px-4  border-secondary-200 align-bottom h-18 flex justify-between items-center`}
+      className={`border-t px-4 h-18 flex justify-between items-center bg-white border-secondary-200`}
     >
       <Button
         content={`Back`}
@@ -40,7 +40,7 @@ function AppFooter() {
         icon={<ChevronRight size={16} />}
         iconPosition="right"
         hoverColor={`hover:bg-primary-800`}
-        buttonColor={`bg-gradient-to-r from-indigo-600 to-primary-500`}
+        buttonColor={`bg-gradient-to-r from-primary-600 to-primary-500`}
         textColor={`text-primary-50`}
         onClick={nextStep}
         isActive={

@@ -4,7 +4,7 @@ import DataExtensionSearchCard from "./DataExtensionSearchCard";
 
 function DataExtensionSearch() {
   return (
-    <div>
+    <div className="flex-grow">
       <StepHeading
         title="Select Data Extension"
         subHeading="Enter the external key of your Data Extension"

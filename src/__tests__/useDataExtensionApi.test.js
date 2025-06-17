@@ -1,8 +1,19 @@
-import { renderHook, act, render, waitFor } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import {
   useDataExtensionApi,
   DataExtensionProvider,
 } from "../hooks/useDataExtensionApi";
+import { TestListConfigProvider } from "../hooks/useTestListConfig";
+
+const AllProviders = ({ children }) => (
+  <TestListConfigProvider>
+    <DataExtensionProvider>{children}</DataExtensionProvider>
+  </TestListConfigProvider>
+);
+
+const renderHookWithProvider = (hook) => {
+  return renderHook(hook, { wrapper: AllProviders });
+};
 
 describe("useDataExtensionApi", () => {
   const originalEnv = process.env.NODE_ENV;
@@ -15,20 +26,12 @@ describe("useDataExtensionApi", () => {
     process.env.NODE_ENV = originalEnv;
   });
 
-  const renderHookWithProvider = (hook) => {
-    return renderHook(hook, {
-      wrapper: ({ children }) => (
-        <DataExtensionProvider>{children}</DataExtensionProvider>
-      ),
-    });
-  };
-
   test("Should have initial state", () => {
     const { result } = renderHookWithProvider(() => useDataExtensionApi());
 
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(null);
-    expect(result.current.prodDataExtension).toBe(null);
+    expect(result.current.selectedDe).toBe(null);
     expect(typeof result.current.fetchDe).toBe("function");
   });
 
@@ -129,49 +132,30 @@ describe("useDataExtensionApi", () => {
       ],
     };
 
-    expect(result.current.prodDataExtension).toEqual(expectedData);
+    expect(result.current.selectedDe).toEqual(expectedData);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBe(null);
 
-    expect(result.current.prodDataExtension.name).toBe(
-      "Transactional_Journey_API_Entry"
+    const fieldNames = result.current.selectedDe.fields.map((f) => f.Name);
+    expect(fieldNames).toEqual(
+      expect.arrayContaining([
+        "SubscriberKey",
+        "eventInstanceId",
+        "Email",
+        "ContactKey",
+        "Last_Name",
+        "First_Name",
+      ])
     );
-    expect(result.current.prodDataExtension.externalKey).toBe(
-      "46F82D8F-B4AA-4BD4-8151-F751448C6608"
-    );
-    expect(result.current.prodDataExtension.fields).toHaveLength(6);
 
-    result.current.prodDataExtension.fields.forEach((field) => {
-      expect(field).toHaveProperty("Name");
-      expect(field).toHaveProperty("FieldType");
-      expect(field).toHaveProperty("MaxLength");
-      expect(field).toHaveProperty("IsRequired");
-      expect(typeof field.Name).toBe("string");
-      expect(typeof field.FieldType).toBe("string");
-      expect(typeof field.IsRequired).toBe("boolean");
-      expect(
-        field.MaxLength === null || typeof field.MaxLength === "number"
-      ).toBe(true);
-    });
-
-    const fieldNames = result.current.prodDataExtension.fields.map(
-      (f) => f.Name
-    );
-    expect(fieldNames).toContain("SubscriberKey");
-    expect(fieldNames).toContain("eventInstanceId");
-    expect(fieldNames).toContain("Email");
-    expect(fieldNames).toContain("ContactKey");
-    expect(fieldNames).toContain("Last_Name");
-    expect(fieldNames).toContain("First_Name");
-
-    const subscriberKeyField = result.current.prodDataExtension.fields.find(
+    const subscriberKeyField = result.current.selectedDe.fields.find(
       (f) => f.Name === "SubscriberKey"
     );
     expect(subscriberKeyField.FieldType).toBe("Text");
     expect(subscriberKeyField.MaxLength).toBe(50);
     expect(subscriberKeyField.IsRequired).toBe(true);
 
-    const emailField = result.current.prodDataExtension.fields.find(
+    const emailField = result.current.selectedDe.fields.find(
       (f) => f.Name === "Email"
     );
     expect(emailField.FieldType).toBe("EmailAddress");

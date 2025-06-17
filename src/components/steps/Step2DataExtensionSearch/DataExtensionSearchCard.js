@@ -8,18 +8,18 @@ import Error from "../../common/messages/Error";
 import Success from "../../common/messages/Success";
 
 function DataExtensionSearchCard() {
-  const { loading, error, prodDataExtension, fetchDe } = useDataExtensionApi();
+  const { loading, error, selectedDe, fetchDe } = useDataExtensionApi();
   const [searchTerm, setSearchTerm] = useState(null);
   const { setCanProceedToNextStep } = useProgress();
 
   useEffect(() => {
-    if (prodDataExtension) {
+    if (selectedDe) {
       setCanProceedToNextStep(true);
-      setSearchTerm(prodDataExtension.externalKey);
+      setSearchTerm(selectedDe.externalKey);
     } else {
       setCanProceedToNextStep(false);
     }
-  }, [prodDataExtension]);
+  }, [selectedDe]);
 
   const handleInput = (event) => {
     setSearchTerm(event.target.value);
@@ -50,22 +50,20 @@ function DataExtensionSearchCard() {
           content="Search"
           icon={<MagnifyingGlass />}
           iconPosition={`left`}
-          buttonColor={`bg-gradient-to-br from-primary-600 to-indigo-600`}
+          buttonColor={`bg-gradient-to-br from-primary-600 to-primary-600`}
           textColor={`text-secondary-100`}
         />
       </div>
-      {prodDataExtension ? (
+      {selectedDe ? (
         <>
           <p className="mb-2">Data Extension Found:</p>
           <Success>
-            <p className={`text-lg -mt-1 font-semibold`}>
-              {prodDataExtension?.name}
-            </p>
-            <p className={`font-mono`}>{prodDataExtension?.externalKey}</p>
+            <p className={`text-lg -mt-1 font-semibold`}>{selectedDe?.name}</p>
+            <p className={`font-mono`}>{selectedDe?.externalKey}</p>
             <p className={`text-success-600 text-xs`}>
-              {prodDataExtension?.fields.length}
-              {prodDataExtension?.fields.length > 1 ? ` fields` : ` field`}
-              {prodDataExtension?.sendableDeField ? " • Sendable" : null}
+              {selectedDe?.fields.length}
+              {selectedDe?.fields.length > 1 ? ` fields` : ` field`}
+              {selectedDe?.sendableDeField ? " • Sendable" : null}
             </p>
           </Success>
         </>

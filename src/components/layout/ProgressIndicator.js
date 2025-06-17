@@ -7,7 +7,7 @@ function ProgressIndicator() {
   const { currentStep, goToStep } = useProgress();
 
   return (
-    <div className={`border-b mb-4 py-6 border-slate-200`}>
+    <div className={`border-b mb-4 py-6 border-secondary-200`}>
       {STEPS_ARRAY.map((step, index) => (
         <div key={index} className="flex">
           <StepIcon

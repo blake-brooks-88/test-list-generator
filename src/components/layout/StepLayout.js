@@ -27,7 +27,11 @@ function StepLayout() {
       currentComponent = <ReviewGenerate />;
       break;
   }
-  return <div className="flex-1 p-6 bg-secondary-50">{currentComponent}</div>;
+  return (
+    <div className="flex-1 p-6 bg-secondary-50 overflow-y-auto">
+      {currentComponent}
+    </div>
+  );
 }
 
 export default StepLayout;

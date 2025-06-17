@@ -2,22 +2,23 @@ import React, { createContext, useContext, useState } from "react";
 import { apiService } from "../services/apiService";
 import { mockApiService } from "../services/mockApiService";
 import { useApiState } from "./useApiState";
+import { useTestListConfig } from "./useTestListConfig";
 
 const DataExtensionContext = createContext();
 
 export const DataExtensionProvider = ({ children }) => {
   const { loading, error, setLoading, setError } = useApiState();
-  const [prodDataExtension, setProdDataExtension] = useState(null);
+  const { selectedDe, setSelectedDe } = useTestListConfig();
 
   const service =
     process.env.NODE_ENV === "development" ? mockApiService : apiService;
 
   const fetchDe = async (deExternalKey) => {
     setLoading(true);
-    setProdDataExtension((prev) => null);
+    setSelectedDe((prev) => null);
     try {
       const response = await service.getDataExtension(deExternalKey);
-      setProdDataExtension(response.dataExtension);
+      setSelectedDe(response.dataExtension);
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -26,7 +27,7 @@ export const DataExtensionProvider = ({ children }) => {
   };
 
   const value = {
-    prodDataExtension,
+    selectedDe,
     loading,
     error,
     fetchDe,

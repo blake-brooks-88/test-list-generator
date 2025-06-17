@@ -149,8 +149,8 @@ module.exports = {
           "100%": { opacity: "1" },
         },
         slideUp: {
-          "0%": { transform: "translateY(10px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
+          "0%": { transform: "transecondaryY(10px)", opacity: "0" },
+          "100%": { transform: "transecondaryY(0)", opacity: "1" },
         },
         scaleIn: {
           "0%": { transform: "scale(0.95)", opacity: "0" },
