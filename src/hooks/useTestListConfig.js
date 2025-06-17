@@ -9,18 +9,16 @@ export const TestListConfigProvider = ({ children }) => {
   const [testDataFields, setTestDataFields] = useState([]);
   const [varianceData, setVarianceData] = useState("");
   const [testData, setTestData] = useState("");
-
-  const selectVariantField = (field) => {
-    if (!variantFields.includes(field)) {
-      setVariantFields((prev) => [...prev, field]);
-    }
-  };
+  const [requiredVarianceFields, setRequiredVarianceFields] = useState([]);
+  const [requiredTestDataFields, setRequiredTestDataFields] = useState([]);
 
   const clearAll = useCallback(() => {
     setSelectedDeState(null);
     setModeState(null);
     setVariantFields([]);
     setTestDataFields([]);
+    setRequiredVarianceFields([]);
+    setRequiredTestDataFields([]);
     setVarianceData("");
     setTestData("");
   }, []);
@@ -32,6 +30,7 @@ export const TestListConfigProvider = ({ children }) => {
       }
       if (newMode === "proof") {
         setVariantFields([]);
+        setRequiredVarianceFields([]);
         setVarianceData("");
         setModeState(newMode);
       } else {
@@ -45,13 +44,29 @@ export const TestListConfigProvider = ({ children }) => {
     setSelectedDeState(de);
     setVariantFields([]);
     setTestDataFields([]);
+    setRequiredVarianceFields([]);
+    setRequiredTestDataFields([]);
     setVarianceData("");
     setTestData("");
   }, []);
 
+  const selectVariantField = (field) => {
+    if (!variantFields.includes(field)) {
+      setVariantFields((prev) => [...prev, field]);
+    }
+
+    if (!requiredVarianceFields.includes(field) && field.IsRequired) {
+      setRequiredVarianceFields((prev) => [...prev, field]);
+    }
+  };
+
   const selectTestDataField = (field) => {
     if (!testDataFields.includes(field)) {
       setTestDataFields((prev) => [...prev, field]);
+    }
+
+    if (!requiredTestDataFields.includes(field) && field.IsRequired) {
+      setRequiredTestDataFields((prev) => [...prev, field]);
     }
   };
 
@@ -59,20 +74,30 @@ export const TestListConfigProvider = ({ children }) => {
     if (variantFields.includes(field)) {
       setVariantFields((prev) => prev.filter((f) => f !== field));
     }
+
+    if (requiredTestDataFields.includes(field)) {
+      setRequiredTestDataFields((prev) => prev.filter((f) => f !== field));
+    }
   };
 
   const unselectTestDataField = (field) => {
     if (testDataFields.includes(field)) {
       setTestDataFields((prev) => prev.filter((f) => f !== field));
     }
+
+    if (requiredTestDataFields.includes(field)) {
+      setRequiredTestDataFields((prev) => prev.filter((f) => f !== field));
+    }
   };
 
   const clearVariantFields = () => {
     setVariantFields([]);
+    setRequiredVarianceFields([]);
   };
 
   const clearTestDataFields = () => {
     setTestDataFields([]);
+    setRequiredTestDataFields([]);
   };
 
   const isVariantFieldSelected = (field) => {
@@ -92,6 +117,8 @@ export const TestListConfigProvider = ({ children }) => {
         varianceData,
         testData,
         mode,
+        requiredVarianceFields,
+        requiredTestDataFields,
         selectVariantField,
         selectTestDataField,
         unselectVariantField,

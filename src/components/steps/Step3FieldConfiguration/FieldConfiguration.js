@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { useDataExtensionApi } from "../../../hooks/useDataExtensionApi";
 import { useTestListConfig } from "../../../hooks/useTestListConfig";
 import StepHeading from "../StepHeading";
 import SendableFieldInfo from "./SendableFieldInfo";
@@ -21,7 +20,7 @@ function FieldConfiguration() {
   } = useTestListConfig();
 
   const [fieldSelectionMode, setFieldSelectionMode] = useState(
-    mode === "variance" ? "variance" : "testData"
+    mode === "sample" ? "variance" : "testData"
   );
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -39,12 +38,16 @@ function FieldConfiguration() {
   }, [testDataFields.length, variantFields.length]);
 
   useEffect(() => {
+    const sendableField = selectedDe.fields.find(
+      (field) => selectedDe.sendableDeField === field.Name
+    );
+    console.log(sendableField);
     if (
       selectedDe?.sendableDeField &&
       !hasAutoSelectedSendable.current &&
-      !isTestDataFieldSelected(selectedDe.sendableDeField)
+      !isTestDataFieldSelected(sendableField)
     ) {
-      selectTestDataField(selectedDe.sendableDeField);
+      selectTestDataField(sendableField);
       hasAutoSelectedSendable.current = true;
     }
   }, [

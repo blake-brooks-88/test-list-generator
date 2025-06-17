@@ -1,9 +1,17 @@
 import React from "react";
 import Checkmark from "../common/icons/Checkmark";
 
-function StepIcon({ stepNumber, isActive, isInactive, stepText, isComplete }) {
+function StepIcon({
+  stepNumber,
+  isActive,
+  isInactive,
+  stepText,
+  isComplete,
+  onClick,
+}) {
   return (
     <div
+      onClick={onClick}
       className={`flex items-center p-2 rounded-md cursor-pointer transition-all duration-200 mb-2 ${
         isActive
           ? "bg-gradient-to-r flex-1 from-primary-50 to-info-50 text-primary-700 shadow-sm"

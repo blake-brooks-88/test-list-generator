@@ -1,4 +1,5 @@
 import React from "react";
+import { animatedBorderWithGlow } from "../../../constants/constants";
 import { useTestListConfig } from "../../../hooks/useTestListConfig";
 import DataBaseZap from "../../common/icons/DataBaseZap";
 import NoteBookWithTabs from "../../common/icons/NoteBookWithTabs";
@@ -20,7 +21,7 @@ function ModeSelectionCard({ type, title, description }) {
         transition-all duration-300 ease-in-out
         ${
           isSelected
-            ? "border-primary-300 ring-2 ring-primary-200 bg-gradient-to-br from-primary-50 via-info-50 to-primary-50 shadow-lg transform scale-105"
+            ? `${animatedBorderWithGlow}   bg-gradient-to-br from-primary-50 via-info-50 to-primary-50 shadow-lg transform scale-105`
             : "border-secondary-100 bg-white hover:bg-secondary-50 hover:border-secondary-200"
         }
       `}

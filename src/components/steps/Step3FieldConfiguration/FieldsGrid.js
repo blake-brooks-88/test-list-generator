@@ -12,30 +12,30 @@ function FieldsGrid({ fields, mode, sendableField }) {
     isTestDataFieldSelected,
   } = useTestListConfig();
 
-  const handleFieldToggle = (fieldName) => {
+  const handleFieldToggle = (field) => {
     if (mode === "variance") {
-      if (sendableField && fieldName === sendableField) {
+      if (sendableField && field.Name === sendableField) {
         return;
       }
 
-      if (isVariantFieldSelected(fieldName)) {
-        unselectVariantField(fieldName);
+      if (isVariantFieldSelected(field)) {
+        unselectVariantField(field);
       } else {
-        selectVariantField(fieldName);
+        selectVariantField(field);
       }
     } else {
       if (
         sendableField &&
-        fieldName === sendableField &&
-        isTestDataFieldSelected(fieldName)
+        field.Name === sendableField &&
+        isTestDataFieldSelected(field)
       ) {
         return;
       }
 
-      if (isTestDataFieldSelected(fieldName)) {
-        unselectTestDataField(fieldName);
+      if (isTestDataFieldSelected(field)) {
+        unselectTestDataField(field);
       } else {
-        selectTestDataField(fieldName);
+        selectTestDataField(field);
       }
     }
   };
@@ -59,15 +59,15 @@ function FieldsGrid({ fields, mode, sendableField }) {
           fieldSelectionMode={mode}
           ownedByAnotherMode={
             mode === "variance"
-              ? isTestDataFieldSelected(field.Name)
-              : isVariantFieldSelected(field.Name)
+              ? isTestDataFieldSelected(field)
+              : isVariantFieldSelected(field)
           }
           isSelected={
             mode === "variance"
-              ? isVariantFieldSelected(field.Name)
-              : isTestDataFieldSelected(field.Name)
+              ? isVariantFieldSelected(field)
+              : isTestDataFieldSelected(field)
           }
-          onToggle={() => handleFieldToggle(field.Name)}
+          onToggle={() => handleFieldToggle(field)}
         />
       ))}
     </div>
