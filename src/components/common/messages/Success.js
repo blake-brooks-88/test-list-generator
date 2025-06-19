@@ -7,7 +7,7 @@ function Success({ children }) {
     <MessageCard
       textColor={`text-success-800`}
       backgroundColor={`bg-success-50`}
-      border={`border border-success-600`}
+      border={`border border-success-200`}
       icon={<CheckmarkWithCircle />}
     >
       {children}

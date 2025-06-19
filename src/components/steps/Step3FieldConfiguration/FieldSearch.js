@@ -14,12 +14,12 @@ function FieldSearch({ searchTerm, onSearchChange }) {
   return (
     <div className="relative">
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <IconSearch className="h-4 w-4 text-secondary-400" />
+        <IconSearch className="h-4 w-4 text-coolgray-400" />
       </div>
       <input
         type="text"
         placeholder="Search fields..."
-        className="pl-10 pr-4 py-2 border border-secondary-300 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-64"
+        className="pl-10 pr-4 py-2 border border-coolgray-300 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-64"
         value={searchTerm}
         onChange={(e) => onSearchChange(e.target.value)}
       />

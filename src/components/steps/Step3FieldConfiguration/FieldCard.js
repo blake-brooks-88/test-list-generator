@@ -53,7 +53,7 @@ function FieldCard({
       return "bg-primary-50 border-primary-300 cursor-pointer hover:bg-primary-100";
     }
 
-    return "bg-white border-secondary-200 cursor-pointer hover:bg-secondary-50 hover:border-secondary-300";
+    return "bg-white border-coolgray-200 cursor-pointer hover:bg-coolgray-50 hover:border-coolgray-300";
   };
 
   const getIconStyles = () => {
@@ -65,7 +65,7 @@ function FieldCard({
       return "text-primary-600";
     }
 
-    return "text-secondary-400";
+    return "text-coolgray-400";
   };
 
   return (
@@ -79,7 +79,7 @@ function FieldCard({
       <div className="flex items-center justify-between">
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-2">
-            <h3 className="text-sm font-medium text-secondary-900 truncate">
+            <h3 className="text-sm font-medium text-coolgray-900 truncate">
               {text}
             </h3>
             {isSendableField && (
@@ -89,7 +89,7 @@ function FieldCard({
             )}
           </div>
           <span className="flex gap-2 mt-1">
-            <p className="text-xs text-secondary-500 ">{type}</p>
+            <p className="text-xs text-coolgray-500 ">{type}</p>
             {isSendableField && fieldSelectionMode === "variance" && (
               <div className="text-xs text-gray-500">
                 Cannot be used for variance

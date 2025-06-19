@@ -2,13 +2,13 @@ import React from "react";
 
 function TabDescription({ mode }) {
   return (
-    <div className="bg-secondary-50 rounded-lg p-4 mb-4">
+    <div className="bg-coolgray-50 rounded-lg p-4 mb-4">
       {mode === "variance" ? (
         <div>
-          <h3 className="text-sm font-medium text-secondary-900 mb-1">
+          <h3 className="text-sm font-medium text-coolgray-900 mb-1">
             Variance Fields
           </h3>
-          <p className="text-sm text-secondary-600">
+          <p className="text-sm text-coolgray-600">
             These fields create different test scenarios. Each unique
             combination generates separate test cases.
             <span className="font-medium"> Example:</span> Select "CustomerType"
@@ -17,10 +17,10 @@ function TabDescription({ mode }) {
         </div>
       ) : (
         <div>
-          <h3 className="text-sm font-medium text-secondary-900 mb-1">
+          <h3 className="text-sm font-medium text-coolgray-900 mb-1">
             Test Data Fields
           </h3>
-          <p className="text-sm text-secondary-600">
+          <p className="text-sm text-coolgray-600">
             These fields will be replaced with safe test values to protect real
             customer data.
             <span className="font-medium"> Example:</span> Replace real emails

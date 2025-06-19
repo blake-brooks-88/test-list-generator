@@ -124,6 +124,18 @@ module.exports = {
           800: "#075985",
           900: "#0c4a6e",
         },
+        coolgray: {
+          50: "#F5F7FA",
+          100: "#E6EBF0",
+          200: "#D3DBE2",
+          300: "#B9C4CE",
+          400: "#98A6B6",
+          500: "#7C8D9F",
+          600: "#617488",
+          700: "#495A6D",
+          800: "#334050",
+          900: "#1F2833",
+        },
       },
       backgroundImage: {
         "gradient-primary":
@@ -180,9 +192,6 @@ module.exports = {
           "0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 2px 10px -2px rgba(0, 0, 0, 0.04)",
         "glow-primary": "0 0 20px rgba(99, 102, 241, 0.3)",
         "glow-accent": "0 0 20px rgba(16, 185, 129, 0.3)",
-      },
-      fontSize: {
-        "2xs": ["0.625rem", { lineHeight: "0.75rem" }],
       },
       transitionDuration: {
         400: "400ms",

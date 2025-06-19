@@ -9,9 +9,9 @@ function SelectionSummary({
   const variantFieldWord = variantCount > 1 ? " fields" : " field";
   const testDataFieldWord = testDataCount > 1 ? " fields" : " field";
   return (
-    <div className="mt-6 pt-6 border-t border-secondary-200">
+    <div className="mt-6 pt-6 border-t border-coolgray-200">
       <div className="flex items-center justify-between text-sm">
-        <div className="text-secondary-600">
+        <div className="text-coolgray-600">
           {generatorMode === "sample" ? (
             <>
               <span className="font-medium">{variantCount}</span> variance

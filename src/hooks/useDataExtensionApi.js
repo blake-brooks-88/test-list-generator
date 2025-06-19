@@ -8,7 +8,7 @@ const DataExtensionContext = createContext();
 
 export const DataExtensionProvider = ({ children }) => {
   const { loading, error, setLoading, setError } = useApiState();
-  const { selectedDe, setSelectedDe } = useTestListConfig();
+  const { selectedDe, setSelectedDe, setRequiredFields } = useTestListConfig();
 
   const service =
     process.env.NODE_ENV === "development" ? mockApiService : apiService;
@@ -19,6 +19,13 @@ export const DataExtensionProvider = ({ children }) => {
     try {
       const response = await service.getDataExtension(deExternalKey);
       setSelectedDe(response.dataExtension);
+      setRequiredFields(
+        response.dataExtension.fields.filter(
+          (field) =>
+            field.IsRequired &&
+            field.Name !== response.dataExtension.sendableDeField
+        )
+      );
       setLoading(false);
     } catch (err) {
       setError(err.message);

@@ -40,8 +40,8 @@ describe("useTestListConfig", () => {
     expect(result.current.variantFields).toEqual([]);
     expect(result.current.testDataFields).toEqual([]);
     expect(result.current.mode).toBe(null);
-    expect(result.current.testData).toBe("");
-    expect(result.current.varianceData).toBe("");
+    expect(result.current.testData).toBe(null);
+    expect(result.current.varianceData).toBe(null);
 
     expect(typeof result.current.selectVariantField).toBe("function");
     expect(typeof result.current.selectTestDataField).toBe("function");

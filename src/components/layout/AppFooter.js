@@ -16,21 +16,21 @@ function AppFooter() {
   const pendingMessage = "Complete this step to continue";
   return (
     <footer
-      className={`border-t px-4 h-18 flex justify-between items-center bg-white border-secondary-200`}
+      className={`border-t px-4 h-18 flex justify-between items-center bg-white border-coolgray-200`}
     >
       <Button
         content={`Back`}
         buttonColor={`bg-white`}
         icon={<ChevronLeft size={16} />}
         iconPosition="left"
-        textColor={`text-secondary-700`}
-        borderColor={`border-secondary-500`}
+        textColor={`text-coolgray-700`}
+        borderColor={`border-coolgray-500`}
         onClick={previousStep}
         isActive={currentStep === 1 ? false : true}
       />
       <p
         className={`
-            ${canProceedToNextStep ? "text-accent-500" : "text-secondary-400"}
+            ${canProceedToNextStep ? "text-accent-500" : "text-coolgray-400"}
         `}
       >
         {canProceedToNextStep ? confirmMessage : pendingMessage}

@@ -16,13 +16,13 @@ function ModeSelectionCard({ type, title, description }) {
   return (
     <div
       className={`
-        flex-1 text-secondary-600 p-6 flex flex-col border-2 
+        flex-1 text-coolgray-600 p-6 flex flex-col border-2 
         cursor-pointer rounded-lg
         transition-all duration-300 ease-in-out
         ${
           isSelected
             ? `${animatedBorderWithGlow}   bg-gradient-to-br from-primary-50 via-info-50 to-primary-50 shadow-lg transform scale-105`
-            : "border-secondary-100 bg-white hover:bg-secondary-50 hover:border-secondary-200"
+            : "border-coolgray-100 bg-white hover:bg-coolgray-50 hover:border-coolgray-200"
         }
       `}
       onClick={handleClick}
@@ -34,13 +34,13 @@ function ModeSelectionCard({ type, title, description }) {
           ${
             isSelected
               ? "bg-gradient-to-br from-primary-600 to-info-600 shadow-lg transform rotate-3"
-              : "bg-secondary-100 hover:bg-secondary-200 hover:scale-110"
+              : "bg-coolgray-100 hover:bg-coolgray-200 hover:scale-110"
           }
         `}
       >
         <div
           className={`${
-            isSelected ? "text-white" : "text-secondary-600"
+            isSelected ? "text-white" : "text-coolgray-600"
           } transition-colors duration-300`}
         >
           {type === "proof" ? <NoteBookWithTabs /> : <DataBaseZap />}
@@ -48,14 +48,14 @@ function ModeSelectionCard({ type, title, description }) {
       </div>
       <h3
         className={`text-lg font-semibold ${
-          isSelected ? "text-secondary-900" : "text-secondary-700"
+          isSelected ? "text-coolgray-900" : "text-coolgray-700"
         } transition-colors duration-300`}
       >
         {title}
       </h3>
       <p
         className={`${
-          isSelected ? "text-secondary-700" : "text-secondary-600"
+          isSelected ? "text-coolgray-700" : "text-coolgray-600"
         } transition-colors duration-300`}
       >
         {description}

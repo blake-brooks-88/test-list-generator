@@ -22,7 +22,7 @@ function DataExtensionSearchCard() {
   }, [selectedDe]);
 
   const handleInput = (event) => {
-    setSearchTerm(event.target.value);
+    setSearchTerm(event.target.value.trim());
   };
 
   const handleSearch = () => {
@@ -35,11 +35,11 @@ function DataExtensionSearchCard() {
     }
   };
   return (
-    <div className="flex flex-col border rounded-lg border-secondary-200 bg-white p-8">
+    <div className="flex flex-col border rounded-lg border-coolgray-200 bg-white p-8">
       <div className="flex gap-4 mb-6">
         <input
           type="text"
-          className="flex-[1] p-3 rounded-xl border border-secondary-300 font-mono"
+          className="flex-[1] p-3 rounded-xl border border-coolgray-300 font-mono"
           placeholder="Data Extension External Key..."
           onChange={handleInput}
           value={searchTerm}
@@ -51,7 +51,7 @@ function DataExtensionSearchCard() {
           icon={<MagnifyingGlass />}
           iconPosition={`left`}
           buttonColor={`bg-gradient-to-br from-primary-600 to-primary-600`}
-          textColor={`text-secondary-100`}
+          textColor={`text-coolgray-100`}
         />
       </div>
       {selectedDe ? (

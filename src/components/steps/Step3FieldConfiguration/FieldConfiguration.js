@@ -41,7 +41,7 @@ function FieldConfiguration() {
     const sendableField = selectedDe.fields.find(
       (field) => selectedDe.sendableDeField === field.Name
     );
-    console.log(sendableField);
+
     if (
       selectedDe?.sendableDeField &&
       !hasAutoSelectedSendable.current &&
@@ -87,7 +87,7 @@ function FieldConfiguration() {
 
       <SendableFieldInfo sendableField={selectedDe?.sendableDeField} />
 
-      <div className="bg-white rounded-lg border border-secondary-200 p-6">
+      <div className="bg-white rounded-lg border border-coolgray-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <FieldSelectionTabs
             generatorMode={mode}

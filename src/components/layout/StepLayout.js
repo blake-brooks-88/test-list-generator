@@ -28,7 +28,7 @@ function StepLayout() {
       break;
   }
   return (
-    <div className="flex-1 p-6 bg-secondary-50 overflow-y-auto">
+    <div className="flex-1 p-6 bg-coolgray-50 overflow-y-auto">
       {currentComponent}
     </div>
   );

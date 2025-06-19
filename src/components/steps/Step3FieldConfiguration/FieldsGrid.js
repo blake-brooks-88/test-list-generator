@@ -43,7 +43,7 @@ function FieldsGrid({ fields, mode, sendableField }) {
   if (fields.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-sm text-secondary-500">No fields available.</p>
+        <p className="text-sm text-coolgray-500">No fields available.</p>
       </div>
     );
   }

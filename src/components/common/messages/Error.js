@@ -7,7 +7,7 @@ function Error({ children }) {
     <MessageCard
       textColor={`text-danger-800`}
       backgroundColor={`bg-danger-50`}
-      border={`border border-danger-600`}
+      border={`border border-danger-200`}
       icon={<Ban />}
     >
       {children}
@@ -16,3 +16,8 @@ function Error({ children }) {
 }
 
 export default Error;
+
+// has header row
+// has data
+// all of the required fields are present
+// all of the required fields have a value present

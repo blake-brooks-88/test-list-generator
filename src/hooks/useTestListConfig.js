@@ -7,13 +7,16 @@ export const TestListConfigProvider = ({ children }) => {
   const [selectedDe, setSelectedDeState] = useState(null);
   const [variantFields, setVariantFields] = useState([]);
   const [testDataFields, setTestDataFields] = useState([]);
-  const [varianceData, setVarianceData] = useState("");
-  const [testData, setTestData] = useState("");
+  const [varianceData, setVarianceData] = useState(null);
+  const [testData, setTestData] = useState(null);
   const [requiredVarianceFields, setRequiredVarianceFields] = useState([]);
   const [requiredTestDataFields, setRequiredTestDataFields] = useState([]);
+  const [requiredFields, setRequiredFields] = useState([]);
+  const [outputDataExtensionName, setOutputDataExtensionName] = useState(null);
 
   const clearAll = useCallback(() => {
     setSelectedDeState(null);
+    setRequiredFields([]);
     setModeState(null);
     setVariantFields([]);
     setTestDataFields([]);
@@ -119,6 +122,9 @@ export const TestListConfigProvider = ({ children }) => {
         mode,
         requiredVarianceFields,
         requiredTestDataFields,
+        requiredFields,
+        outputDataExtensionName,
+        setRequiredFields,
         selectVariantField,
         selectTestDataField,
         unselectVariantField,
@@ -132,6 +138,7 @@ export const TestListConfigProvider = ({ children }) => {
         setMode,
         setVarianceData,
         setTestData,
+        setOutputDataExtensionName,
       }}
     >
       {children}
