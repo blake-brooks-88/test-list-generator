@@ -7,7 +7,7 @@ import { useTestListConfig } from "./useTestListConfig";
 const DataExtensionContext = createContext();
 
 export const DataExtensionProvider = ({ children }) => {
-  const { loading, error, setLoading, setError } = useApiState();
+  const { loading, error, setLoading, setError, clearError } = useApiState();
   const { selectedDe, setSelectedDe, setRequiredFields } = useTestListConfig();
 
   const service =
@@ -33,11 +33,38 @@ export const DataExtensionProvider = ({ children }) => {
     }
   };
 
+  const createDe = async (deDetails) => {
+    setLoading(true);
+    try {
+      const result = await service.createDataExtension(deDetails);
+      setLoading(false);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  const overwriteDe = async (data) => {
+    setLoading(true);
+    try {
+      const result = await service.overWriteDataExtension(data);
+      setLoading(false);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
   const value = {
     selectedDe,
     loading,
     error,
     fetchDe,
+    createDe,
+    clearError,
+    overwriteDe,
   };
 
   return (

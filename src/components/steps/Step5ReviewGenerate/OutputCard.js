@@ -9,7 +9,7 @@ function OutputCard({ children, isActive, title, description, handleSelect }) {
   };
   return (
     <div
-      className={`flex-col p-4 w-full border transition-all duration-200 mb-4 cursor-pointer ${getCardStyles()} rounded-lg`}
+      className={`flex-col p-4 w-full border transition-all duration-200 mb-4  border-coolgray-100 rounded-lg`}
       onClick={handleSelect}
     >
       <p className={`font-semibold mb-1 text-coolgray-900`}>{title}</p>

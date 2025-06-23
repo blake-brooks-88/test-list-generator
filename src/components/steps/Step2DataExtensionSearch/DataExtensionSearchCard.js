@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDataExtensionApi } from "../../../hooks/useDataExtensionApi";
 import { useProgress } from "../../../hooks/useProgress";
+import { useTestListConfig } from "../../../hooks/useTestListConfig";
 import Button from "../../common/Button";
 import Loader from "../../common/icons/Loader";
 import MagnifyingGlass from "../../common/icons/MagnifyingGlass";
@@ -8,7 +9,8 @@ import Error from "../../common/messages/Error";
 import Success from "../../common/messages/Success";
 
 function DataExtensionSearchCard() {
-  const { loading, error, selectedDe, fetchDe } = useDataExtensionApi();
+  const { loading, error, fetchDe } = useDataExtensionApi();
+  const { selectedDe } = useTestListConfig();
   const [searchTerm, setSearchTerm] = useState(null);
   const { setCanProceedToNextStep } = useProgress();
 
