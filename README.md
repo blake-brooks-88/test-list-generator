@@ -1,70 +1,145 @@
-# Getting Started with Create React App
+# Test List Generator for Salesforce Marketing Cloud
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React application that simplifies generating comprehensive test data for Marketing Cloud campaigns.
 
-## Available Scripts
+## What It Does
 
-In the project directory, you can run:
+The Test List Generator helps marketing teams safely test email campaigns by:
 
-### `npm start`
+- **Sampling Production Data**: Extract real data combinations from live Data Extensions while replacing sensitive information with test values
+- **Generating Proofing Lists**: Create synthetic test data with specific variance combinations for comprehensive scenario testing
+- **Ensuring Safety**: Built-in guardrails prevent accidental sends to real customers and protect production data
+- **Automating Complexity**: Eliminates hours of manual test data creation with guided workflows
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Architecture
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Frontend (React)
+- **5-step guided workflow** with sub-step navigation
+- **Custom hooks** for state management (`useProgress`, `useTestListConfig`, `useDataExtensionApi`)
+- **Comprehensive test coverage** with React Testing Library
+- **Modern UI/UX** with Tailwind CSS and your custom color palette
 
-### `npm test`
+### Backend (Marketing Cloud Code Resource)
+- **Query generation and execution** for production data sampling
+- **Bulk data operations** for synthetic data insertion
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Technology Stack
 
-### `npm run build`
+- **Frontend**: React 18, Tailwind CSS, React Testing Library, Jest
+- **Backend**: Marketing Cloud Server-Side JavaScript (SSJS)
+- **APIs**: Marketing Cloud SOAP API, REST API integration
+- **State Management**: React Context with custom hooks
+- **Testing**: Test-Driven Development approach
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Prerequisites
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Required Access
+- **Salesforce Marketing Cloud Enterprise Account** with:
+  - Data Extension read/write permissions
+  - Query creation and execution rights
+  - Business unit access for target operations
+  - Code Resource deployment capabilities
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Development Setup
+- Node.js 16+ 
+- npm or yarn package manager
+- Modern browser with ES6+ support
 
-### `npm run eject`
+## Getting Started
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Installation
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/test-list-generator.git
+cd test-list-generator
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Install dependencies
+npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Start development server
+npm start
+```
 
-## Learn More
+### Development Mode (Mock API)
+The application includes a comprehensive mock API for development and testing without Marketing Cloud access.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Test with these example Data Extension external keys:**
+- `46F82D8F-B4AA-4BD4-8151-F751448C6608` - Sample sendable DE with subscriber data
+- `NOT_FOUND` - Triggers DE not found error
+- `SERVER_ERROR` - Simulates server/network errors
+- Empty string - Triggers missing external key validation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Production Deployment
+1. Deploy the React app to your hosting platform
+2. Deploy the Code Resource to your Marketing Cloud instance  
+3. Configure authentication tokens and security settings
+4. Update API endpoints to point to your Code Resource
 
-### Code Splitting
+## Usage Workflow
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Step 1: Choose Strategy
+Select between:
+- **Sample Production Data** - Extract from live Data Extensions
+- **Generate Proofing List** - Create synthetic test data
 
-### Analyzing the Bundle Size
+### Step 2: Select Data Extension
+Search and choose your source/template Data Extension with built-in validation for minimum field requirements.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Step 3: Configure Fields (Sub-steps)
+- **3A**: Select variance fields (create multiple scenarios)  
+- **3B**: Select test data fields (safe replacement values)
 
-### Making a Progressive Web App
+### Step 4: Input Data
+- **Sample Mode**: Enter test replacement data
+- **Proof Mode**: Enter variance combinations + test data (CSV format)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Step 5: Review & Generate  
+Review configuration, choose output options, and execute generation with safety confirmations.
 
-### Advanced Configuration
+## Security Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **Production Data Protection**: Never allows overwriting source production Data Extensions
+- **Token-based Authentication**: Validates requests originate from authorized frontend
+- **Rate Limiting**: Prevents API abuse and bulk unauthorized access
+- **Origin Validation**: Restricts access to authorized domains
+- **Sendable DE Safeguards**: Special handling for subscriber-sendable Data Extensions
 
-### Deployment
+## Testing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The project follows Test-Driven Development (TDD) principles:
 
-### `npm run build` fails to minify
+```bash
+# Run all tests
+npm test
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Test Coverage Includes:**
+- Custom hooks (`useProgress`, `useTestListConfig`, `useDataExtensionApi`)
+- API service layer with mock implementations
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── layout/          # App header, progress indicators
+│   ├── common/          # Shared UI components  
+│   ├── steps/           # Step-specific components
+│   │   ├── Step1ModeSelection/
+│   │   ├── Step2DataExtensionSearch/
+│   │   ├── Step3FieldConfiguration/
+│   │   ├── Step4DataInput/
+│   │   └── Step5ReviewGenerate/
+│   └── navigation/      # Step navigation controls
+├── hooks/               # Custom React hooks
+├── services/            # API services and mocks
+└── __tests__/          # Test files
+```
+
+## UI/UX Features
+
+- **Progressive disclosure** - Shows relevant information at each step
+- **Smart validation** - Real-time feedback with helpful error messages
+- **Visual field management** - Clear indication of selected, disabled, and available fields
+- **Responsive design** - Works across desktop and mobile devices
+- **Modern aesthetics** - Custom color palette with smooth animations
