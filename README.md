@@ -117,25 +117,6 @@ npm test
 - Custom hooks (`useProgress`, `useTestListConfig`, `useDataExtensionApi`)
 - API service layer with mock implementations
 
-## Project Structure
-
-```
-src/
-├── components/
-│   ├── layout/          # App header, progress indicators
-│   ├── common/          # Shared UI components  
-│   ├── steps/           # Step-specific components
-│   │   ├── Step1ModeSelection/
-│   │   ├── Step2DataExtensionSearch/
-│   │   ├── Step3FieldConfiguration/
-│   │   ├── Step4DataInput/
-│   │   └── Step5ReviewGenerate/
-│   └── navigation/      # Step navigation controls
-├── hooks/               # Custom React hooks
-├── services/            # API services and mocks
-└── __tests__/          # Test files
-```
-
 ## UI/UX Features
 
 - **Progressive disclosure** - Shows relevant information at each step
