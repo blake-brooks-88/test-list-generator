@@ -48,4 +48,8 @@ export const apiService = {
   overWriteDataExtension: (data) => {
     return request("?action=overWriteDataExtension", "POST", data);
   },
+
+  createSampleList: (sampleListConfig) => {
+    return request("?action=createSampleList", "POST", sampleListConfig);
+  },
 };

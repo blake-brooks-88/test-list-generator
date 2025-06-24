@@ -108,7 +108,7 @@ function ReviewGenerate() {
     mode,
   } = useTestListConfig();
 
-  const { createDe, overwriteDe, loading, error, clearError } =
+  const { createDe, overwriteDe, loading, error, clearError, createSamples } =
     useDataExtensionApi();
   const [outputOption, setOutputOption] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -122,46 +122,29 @@ function ReviewGenerate() {
     }
   }, [error]);
 
-  const generateSampleOutput = () => {
+  const generateSampleOutput = async () => {
     const sourceDe = {
       Name: selectedDe.name,
       CustomerKey: selectedDe.externalKey,
     };
 
-    const outputDataExtensionExternalKey = createNewDataExtension();
+    const outputDataExtensionExternalKey = await createNewDataExtension();
+    await delay(3000);
     const targetDe = {
       Name: outputDataExtensionName,
       CustomerKey: outputDataExtensionExternalKey,
     };
 
-    let resultRows = [];
-    let testDataRows = [];
-    const testDataProperties = testData.forEach((testRow) => {
-      testDataRows = [];
-      for (const testField in testRow) {
-        testDataRows.push({
-          Name: testField,
-          Value: testRow[testField],
-        });
-      }
-      resultRows.push(testDataRows);
-    });
-
     const sampleListConfig = {
       sourceDataExtension: sourceDe,
       targetDe: targetDe,
       varianceFields: variantFields,
-      testData: resultRows,
+      testData: testData,
       allFields: selectedDe.fields,
       maxRecords: sampleLimit,
     };
-    return sampleListConfig;
-    // call API to build sample list
-    // createSampleList(sampleListConfig)
-    // create query activity
-    // build query
-    // run query
-    // delete query
+    await createSamples(sampleListConfig);
+    setSuccessMessage("Query run successfully!");
   };
 
   const generateProofingOutput = async () => {
@@ -223,7 +206,7 @@ function ReviewGenerate() {
       sendableField
     );
 
-    createDe(newDe);
+    await createDe(newDe);
     setSuccessMessage("Data Extension created successfully!");
     return newDe.CustomerKey;
   };

@@ -33,6 +33,17 @@ export const DataExtensionProvider = ({ children }) => {
     }
   };
 
+  const createSamples = async (sampleListConfig) => {
+    setLoading(true);
+    try {
+      const response = await service.createSampleList(sampleListConfig);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
   const createDe = async (deDetails) => {
     setLoading(true);
     try {
@@ -65,6 +76,7 @@ export const DataExtensionProvider = ({ children }) => {
     createDe,
     clearError,
     overwriteDe,
+    createSamples,
   };
 
   return (
